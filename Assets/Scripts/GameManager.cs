@@ -1,10 +1,14 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
 
     public List<Player> players;
+    public Transform[] faces;
+    public GameObject[] spawnPoints;
+    public int player1Face, player2Face;
 
     public static GameManager instance;
 
@@ -17,9 +21,31 @@ public class GameManager : MonoBehaviour {
         StartUp();
     }
 
+    void OnLevelWasLoaded()
+    {
+        StartUp();
+    }
+
     void StartUp()
     {
-        players = new List<Player>();
+        switch (SceneManager.GetActiveScene().name)
+        {
+            case "Arena":
+                spawnPoints = GameObject.FindGameObjectsWithTag("SpawnPoint");
+                players = new List<Player>();
+                Instantiate(faces[player1Face], spawnPoints[1].transform.position,
+                    spawnPoints[1].transform.rotation);
+                Instantiate(faces[player2Face], spawnPoints[0].transform.position,
+                    spawnPoints[0].transform.rotation);
+                break;
+
+        }
+    }
+
+    public void SetControls()
+    {
+        if(players.Count > 1)
+            players[1].useSecondaryControls = true;
     }
 
     public void GameOver(Player loser)

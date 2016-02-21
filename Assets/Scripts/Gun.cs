@@ -1,30 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Gun : MonoBehaviour {
+public class Gun : Weapon {
 
-    public int damage;
-    public LayerMask playerLayer;
     public Transform firePoint;
 
-    Player player;
-
-    void Start()
-    {
-        player = GetComponentInParent<Player>();
-    }
-
-    void Update()
-    {
-        if (player.lost)
-            return;
-        if (Input.GetKeyDown(player.keys[1]))
-        {
-            Fire();
-        }
-    }
-
-    void Fire()
+    protected override void OnAttack(bool OnGround)
     {
         Vector2 rayDir;
         if (player.facingRight)
@@ -36,7 +17,7 @@ public class Gun : MonoBehaviour {
             50, playerLayer);
         if (hit && hit.transform.tag == "Player")
         {
-            hit.transform.GetComponent<Player>().LoseHealth(damage);
+            hit.transform.GetComponent<Player>().TakeDamage(damage);
         }
     }
 }
